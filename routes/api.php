@@ -10,3 +10,5 @@ Route::get('/user', function (Request $request) {
 Route::get('/test', function () {
     return response()->json(['message' => 'Test route works!']);
 });
+
+Route::apiResource('posts', \App\Http\Controllers\PostController::class);
