@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
+use App\Http\Resources\PostResource;
 use App\Models\Post;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -16,7 +17,7 @@ class PostController extends Controller
     public function index(): JsonResponse
     {
         $posts = Post::latest()->get();
-        return $this->success($posts, 'Posts retrieved successfully');
+        return $this->success(PostResource::collection($posts), 'Posts retrieved successfully');
     }
 
     /**
@@ -26,7 +27,7 @@ class PostController extends Controller
     {
         $post = Post::create($request->validated());
 
-        return $this->success($post, 'Post created successfully', 201);
+        return $this->success(PostResource::make($post), 'Post created successfully', 201);
     }
 
     /**
@@ -34,7 +35,7 @@ class PostController extends Controller
      */
     public function show(Post $post): JsonResponse
     {
-        return $this->success($post, 'Post retrieved successfully');
+        return $this->success(PostResource::make($post), 'Post retrieved successfully');
     }
 
     /**
@@ -44,7 +45,7 @@ class PostController extends Controller
     {
         $post->update($request->validated());
 
-        return $this->success($post, 'Post updated successfully');
+        return $this->success(PostResource::make($post), 'Post updated successfully');
     }
 
     /**
