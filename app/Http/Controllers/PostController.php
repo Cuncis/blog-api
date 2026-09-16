@@ -14,7 +14,7 @@ class PostController extends Controller
     public function index(): JsonResponse
     {
         $posts = Post::latest()->get();
-        return response()->json($posts);
+        return $this->success($posts, 'Posts retrieved successfully');
     }
 
     /**
@@ -24,7 +24,7 @@ class PostController extends Controller
     {
         $post = Post::create($request->all());
 
-        return response()->json($post, 201);    // 201 Created
+        return $this->success($post, 'Post created successfully', 201);
     }
 
     /**
@@ -32,7 +32,7 @@ class PostController extends Controller
      */
     public function show(Post $post): JsonResponse
     {
-        return response()->json($post);
+        return $this->success($post, 'Post retrieved successfully');
     }
 
     /**
@@ -42,7 +42,7 @@ class PostController extends Controller
     {
         $post->update($request->all());
 
-        return response()->json($post);
+        return $this->success($post, 'Post updated successfully');
     }
 
     /**
@@ -52,6 +52,6 @@ class PostController extends Controller
     {
         $post->delete();
 
-        return response()->json(null, 204);    // 204 No Content
+        return $this->success(null, 'Post deleted successfully', 204);
     }
 }

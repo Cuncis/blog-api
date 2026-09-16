@@ -24,6 +24,7 @@ return Application::configure(basePath: dirname(__DIR__))
             if ($request->is('api/*')) {
                 return response()->json([
                     'success' => false,
+                    'code'    => 404,
                     'message' => 'Resource not found',
                     'errors'  => null,
                 ], 404);
@@ -35,6 +36,7 @@ return Application::configure(basePath: dirname(__DIR__))
             if ($request->is('api/*')) {
                 return response()->json([
                     'success' => false,
+                    'code'    => 422,
                     'message' => 'Validation failed',
                     'errors'  => $e->errors(),
                 ], 422);
@@ -46,6 +48,7 @@ return Application::configure(basePath: dirname(__DIR__))
             if ($request->is('api/*')) {
                 return response()->json([
                     'success' => false,
+                    'code'    => 401,
                     'message' => 'Unauthenticated',
                     'errors'  => null,
                 ], 401);
