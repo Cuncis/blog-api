@@ -12,3 +12,5 @@ Route::get('/test', function () {
 });
 
 Route::apiResource('posts', \App\Http\Controllers\PostController::class);
+
+Route::apiResource('posts.comments', \App\Http\Controllers\CommentController::class);
