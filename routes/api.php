@@ -6,9 +6,15 @@ use App\Http\Controllers\PostController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-
 Route::get('/test', function () {
     return response()->json(['message' => 'Test route works!']);
+});
+
+Route::get('/health', function () {
+    return response()->json([
+        'status' => 'ok',
+        'time' => now()->toIso8601String(),
+    ]);
 });
 
 Route::post('/register', [AuthController::class, 'register'])->middleware('throttle:register');
