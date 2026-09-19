@@ -11,10 +11,10 @@ Route::get('/test', function () {
     return response()->json(['message' => 'Test route works!']);
 });
 
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);
+Route::post('/register', [AuthController::class, 'register'])->middleware('throttle:register');
+Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:login');
 
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware(['auth:sanctum', 'throttle:api'])->group(function () {
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
@@ -34,7 +34,7 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     // Writing requires 'posts:write' — a read-only token gets blocked here
-    Route::middleware('abilities:posts:write')->group(function () {
+    Route::middleware(['abilities:posts:write', 'throttle:writes'])->group(function () {
         Route::post('/posts', [PostController::class, 'store']);
         Route::put('/posts/{post}', [PostController::class, 'update']);
         Route::patch('/posts/{post}', [PostController::class, 'update']);
@@ -44,7 +44,7 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     // Deleting requires the most sensitive ability, kept separate on purpose
-    Route::middleware('abilities:posts:delete')->group(function () {
+    Route::middleware(['abilities:posts:delete', 'throttle:writes'])->group(function () {
         Route::delete('/posts/{post}', [PostController::class, 'destroy']);
         Route::delete('/comments/{comment}', [CommentController::class, 'destroy']);
     });

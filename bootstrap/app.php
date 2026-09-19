@@ -5,6 +5,7 @@ use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Http\Exceptions\ThrottleRequestsException;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -64,6 +65,17 @@ return Application::configure(basePath: dirname(__DIR__))
                     'message' => 'This token does not have permission to perform this action',
                     'errors'  => null,
                 ], 403);
+            }
+        });
+
+        // New today: too many requests
+        $exceptions->render(function (ThrottleRequestsException $e, $request) {
+            if ($request->is('api/*')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Too many requests. Please slow down and try again shortly.',
+                    'errors'  => null,
+                ], 429);
             }
         });
     })->create();
