@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -52,6 +53,17 @@ return Application::configure(basePath: dirname(__DIR__))
                     'message' => 'Unauthenticated',
                     'errors'  => null,
                 ], 401);
+            }
+        });
+
+        // New today: token doesn't have the required ability (or a Policy denies access — Day 10)
+        $exceptions->render(function (AuthorizationException $e, $request) {
+            if ($request->is('api/*')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'This token does not have permission to perform this action',
+                    'errors'  => null,
+                ], 403);
             }
         });
     })->create();
