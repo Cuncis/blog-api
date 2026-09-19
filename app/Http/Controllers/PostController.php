@@ -43,6 +43,7 @@ class PostController extends Controller
      */
     public function update(UpdatePostRequest $request, Post $post): JsonResponse
     {
+        $this->authorize('update', $post);
         $post->update($request->validated());
 
         return $this->success(PostResource::make($post), 'Post updated successfully');
@@ -53,6 +54,8 @@ class PostController extends Controller
      */
     public function destroy(Post $post): JsonResponse
     {
+        $this->authorize('delete', $post);
+
         $post->delete();
 
         return $this->success(null, 'Post deleted successfully', 204);
